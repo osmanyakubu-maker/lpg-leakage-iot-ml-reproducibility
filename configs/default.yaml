@@ -1,0 +1,142 @@
+# =============================================================================
+# Default configuration for
+# "An IoT and Machine Learning Framework for LPG Leakage Monitoring and
+#  Automated Safety Control: A Design Science Research Study" (revision r10.0.6).
+#
+# Each value is annotated with the manuscript section that reports it.
+# =============================================================================
+
+paths:
+  simulation_samples: data/simulation/samples.csv      # 500 CFD runs, 1.8 M samples (Sec. 4.1)
+  chamber_samples: data/chamber/samples.csv            # 100 chamber runs (Sec. 4.4.1)
+  chamber_timing: data/chamber/timing_trace.csv        # per-event stage timings (Tables 4-5)
+  chamber_system_metrics: data/chamber/system_metrics.csv  # CPU / memory / power / bandwidth (Table 4)
+  tinyml_measurements: data/tinyml/esp32_measurements.csv  # on-device measurements (Sec. 4.4.3)
+  human_factors_aggregate: data/human_factors/aggregate.csv  # de-identified aggregates (Sec. 4.5)
+  results_dir: results
+
+seeds_file: configs/seeds.yaml
+
+# --- Data schema (one row per sensor sample) --------------------------------
+columns:
+  run_id: run_id        # CFD run / chamber run identifier (grouping key)
+  time: time_s          # seconds since start of run
+  lpg: lpg_ppm          # G
+  temperature: temp_c   # T
+  humidity: rh_pct      # H
+  smoke: smoke          # S
+  flame: flame          # F (0/1)
+  label: label          # optional ground-truth class 0..4; derived from rules if absent
+
+classes: [Safe, Low, Medium, High, Critical]   # Sec. 3.2
+critical_class: 4
+
+# --- Risk-class rules (Sec. 3.2, ML Intelligence Layer) ---------------------
+risk_rules:
+  low_ppm: 200
+  medium_ppm: 500
+  high_ppm: 1500
+  critical_ppm: 3000
+  critical_rate_ppm_per_s: 50     # dLPG/dt > 50 ppm/s -> Critical
+  flame_is_critical: true
+
+# --- Sensing / preprocessing (Sec. 3.2) -------------------------------------
+sampling_hz: 2
+preprocessing:
+  median_window: 5                # "5-sample median filter"
+  moving_average_window: 5
+
+# --- Feature extraction (Eq. 3) ---------------------------------------------
+features:
+  short_window_s: 10              # mu/sigma of G and S over 10 s
+  long_window_s: 60               # Sec. 3.2 says 10 s and 60 s windows; Eq. 3 lists only 10 s features
+  include_long_window: false
+
+# --- Kalman fusion (Sec. 3.3, Eqs. 4-9) -------------------------------------
+kalman:
+  enabled: true
+  # State x = [G, T, H, S, F, dG/dt, dT/dt, dH/dt]; measurements z = [G, T, H, S, F]
+  process_noise_diag: [1.0, 0.01, 0.01, 0.1, 0.01, 0.5, 0.001, 0.001]
+  measurement_noise_diag: [25.0, 0.25, 1.0, 1.0, 0.05]
+
+# --- Splitting (Sec. 3.8) ---------------------------------------------------
+split:
+  train: 0.70
+  val: 0.15
+  test: 0.15
+  group_by: run_id                # no run appears in more than one split
+  stratify_by: run_max_class      # stratified by risk class at run level
+  vary_split_with_seed: false
+
+# --- Class imbalance (Sec. 3.4.3) -------------------------------------------
+imbalance:
+  smote: true
+  smote_k: 5
+  smote_sampling_strategy: auto
+  critical_cost_weight: 10
+
+# --- Stacked ensemble (Sec. 3.4.1) ------------------------------------------
+ensemble:
+  rf:
+    n_estimators: 500
+    max_depth: null
+    min_samples_leaf: 1
+    n_jobs: -1
+  xgb:
+    n_estimators: 500
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 1.0
+    colsample_bytree: 1.0
+    tree_method: hist
+    n_jobs: -1
+  meta:
+    l2_C: 1.0
+  stacking_cv_folds: 5
+  pruned_n_estimators: 320        # Sec. 3.4.5 / Table 2 (500 -> 320 trees)
+
+# --- Online learning (Sec. 3.4.2, Algorithm 1, Table 2) ---------------------
+online:
+  enabled: true
+  lambda_ewc: 0.01
+  learning_rate: 0.01
+  batch_size: 128
+  update_every: 100               # Algorithm 1, line 6
+  window_days: 7
+  page_hinkley:
+    delta: 0.005
+    threshold: 50.0
+    alpha: 0.9999
+  min_retrain_samples: 2000
+  # Offline evaluation of online learning: held-out test runs are streamed
+  # prequentially (predict, then reveal the label and update).
+  evaluation_mode: prequential
+
+# --- Baselines (Sec. 3.8, Table 3) ------------------------------------------
+baselines_grid_file: configs/baselines_grid.yaml
+
+# --- TinyML (Sec. 4.4.3) ----------------------------------------------------
+tinyml:
+  n_estimators: 20
+  max_depth: 8
+  feature_bits: 8                 # INT8 quantisation (Sec. 3.4.4)
+
+# --- Evaluation -------------------------------------------------------------
+evaluation:
+  significance_alpha: 0.05
+  lead_time_trigger_class: 3      # High (Sec. 4.2 definition of lead time)
+  # Binary alarm view used for chamber false-negative / false-alarm rates.
+  # Sec. 4.2: the alarm sounds at Medium.
+  alarm_min_class: 2
+  # Chamber evaluation: train on the 70 chamber training runs ("chamber") or
+  # apply the simulation-trained model ("simulation").
+  chamber_training: chamber
+
+# --- Table 2 sensitivity sweeps (Table 2, "Sensitivity observed") -----------
+# One parameter is varied at a time; all others keep the values above.
+sensitivity:
+  n_seeds: 3                      # first n model seeds from seeds.yaml
+  lambda_ewc: [0.001, 0.005, 0.01, 0.05, 0.1]   # "0.001-0.1 tested"
+  ph_delta: [0.001, 0.005, 0.01]
+  smote_k: [3, 5, 7]
+  critical_cost_weight: [5, 10, 20]

@@ -1,0 +1,31 @@
+# Cost-benefit inputs (Sec. 4.6, Table 10).
+#
+# annual_savings: the "Annual savings" column of Table 10.
+# maintenance_netted: whether that figure is already net of annual maintenance.
+#   Residential: $150 gross insurance saving - $30 maintenance = $120 net (Sec. 4.6).
+#   Others:      gross figures.
+horizon_years: 5
+environments:
+  Residential: {unit_cost: 220, annual_maintenance: 30, annual_savings: 120, maintenance_netted: true}
+  Restaurant:  {unit_cost: 220, annual_maintenance: 30, annual_savings: 500, maintenance_netted: false}
+  Hotel:       {unit_cost: 220, annual_maintenance: 30, annual_savings: 300, maintenance_netted: false}
+  Industrial:  {unit_cost: 570, annual_maintenance: 80, annual_savings: 2000, maintenance_netted: false}
+# Restaurant and Hotel use the residential maintenance cost.
+
+# Benefit assumptions (Sec. 4.6). preventable_fraction also sets the sensitivity scaling below.
+assumptions:
+  saving_per_avoided_residential_fire: 50000
+  preventable_fraction: 0.80
+  insurance_discount_fraction: 0.05
+  residential_gross_insurance_saving: 150
+
+# Reported values (Table 10), shown next to the computed values in the script output.
+reported:
+  Residential: {payback: "22 months", roi_pct: 173}
+  Restaurant:  {payback: "5 months", roi_pct: 1036}
+  Hotel:       {payback: "9 months", roi_pct: 581}
+  Industrial:  {payback: "3.5 months", roi_pct: 1654}
+
+sensitivity:
+  preventable_fraction_low: 0.60   # Sec. 4.6: "With a 60% rate of prevention ..."
+  reported_residential_payback: "approximately 29 months (2.4 years)"

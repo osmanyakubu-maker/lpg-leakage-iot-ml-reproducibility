@@ -1,0 +1,11 @@
+metric,condition,mean,sd,n,p_value,p_reported,cohens_d,source
+sus,baseline,62,,20,,,,Sec. 4.5 / Fig. 5
+sus,shap,78,,20,0.01,<0.01,1.24,Sec. 4.5 / Fig. 5
+decision_time_s,baseline,5.7,,20,,,,Sec. 4.5 / Fig. 5
+decision_time_s,shap,3.2,,20,0.01,<0.01,0.96,Sec. 4.5 / Fig. 5
+decision_accuracy,baseline,0.78,,20,,,,Sec. 4.5 / Fig. 5
+decision_accuracy,shap,0.92,,20,0.01,<0.01,1.08,Sec. 4.5 / Fig. 5
+trust,baseline,,,20,,,,Sec. 4.5
+trust,shap,,,20,0.05,<0.05,0.82,Sec. 4.5
+confidence,baseline,,,20,,,,Sec. 4.5
+confidence,shap,,,20,0.05,<0.05,0.91,Sec. 4.5

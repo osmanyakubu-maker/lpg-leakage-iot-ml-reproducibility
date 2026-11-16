@@ -1,0 +1,13 @@
+# Smoke-tested (archive 0.2.0) with: Python 3.13, numpy 2.5, pandas 3.0, scikit-learn 1.9, scipy 1.18,
+# matplotlib 3.11, PyYAML 6.0 (xgboost/shap/torch not installed in that environment).
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+scikit-learn>=1.4
+xgboost>=2.0
+shap>=0.44
+matplotlib>=3.8
+PyYAML>=6.0
+# optional
+# torch>=2.2        # LSTM, 1D-CNN, Attentional Bi-LSTM baselines (Table 3)
+# emlearn>=0.19     # C export of the ESP32 forest

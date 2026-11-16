@@ -1,0 +1,73 @@
+# Reduced search grid for the smoke test only.
+max_configs: 2
+selection_metric: f1_critical
+decision_tree:
+  max_depth:
+  - 8
+  - null
+  min_samples_leaf:
+  - 1
+svm:
+  alpha:
+  - 0.0001
+  loss:
+  - hinge
+  max_train_samples: 20000
+random_forest:
+  n_estimators:
+  - 30
+  max_depth:
+  - null
+  min_samples_leaf:
+  - 1
+  max_features:
+  - sqrt
+xgboost:
+  n_estimators:
+  - 30
+  max_depth:
+  - 4
+  learning_rate:
+  - 0.1
+  subsample:
+  - 1.0
+lstm:
+  seq_len:
+  - 20
+  hidden:
+  - 32
+  layers:
+  - 1
+  lr:
+  - 0.001
+  epochs:
+  - 1
+cnn1d:
+  seq_len:
+  - 20
+  channels:
+  - 32
+  kernel:
+  - 3
+  lr:
+  - 0.001
+  epochs:
+  - 1
+attn_bilstm:
+  seq_len:
+  - 20
+  hidden:
+  - 32
+  lr:
+  - 0.001
+  epochs:
+  - 1
+contextual_baselines:
+  iTransformer-XGBoost:
+    accuracy: 0.915
+    f1_macro: 0.897
+    source: Zeng et al. [11]
+  TLPN [11]:
+    accuracy: 0.911
+    f1_macro: 0.864
+    source: Zeng et al. [11]

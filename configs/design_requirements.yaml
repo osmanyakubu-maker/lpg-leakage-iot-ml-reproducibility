@@ -1,0 +1,18 @@
+# Design requirements R1-R12 (Sec. 3.1, Table 12).
+# `source` says where the attained value comes from when scripts/run_all.sh runs:
+#   results:<file>:<key>   -> read from a JSON written by another script
+#   measured:<value>       -> measured outside this code base
+#   design                 -> design target, not measured
+requirements:
+  R1:  {name: Real-time sensing,          target: ">= 1 Hz",   op: ge, threshold: 1,     source: "config:sampling_hz"}
+  R2:  {name: Multi-sensor fusion,        target: Kalman filter, op: impl,                source: "config:kalman.enabled"}
+  R3:  {name: Risk classification,        target: "F1 >= 0.95", op: ge, threshold: 0.95, source: "results:table3_model_comparison.json:Proposed ensemble.f1_critical_mean"}
+  R4:  {name: Edge computing,             target: "< 500 ms",  op: lt, threshold: 500,   source: "results:table4_latency.json:edge_latency_ms_mean"}
+  R5:  {name: Reliable communication,     target: ">= 99% PDR", op: ge, threshold: 0.99, source: "results:chamber_metrics.json:packet_delivery_ratio"}
+  R6:  {name: Intervention automation,    target: "< 1 s",     op: lt, threshold: 1000,  source: "results:table5_timing_trace.json:total_ms"}
+  R7:  {name: Scalability,                target: "1-1,000 nodes", op: design,           source: design}
+  R8:  {name: Security,                   target: TLS/DTLS,    op: impl,                  source: "measured:implemented"}
+  R9:  {name: Fault tolerance,            target: "99.9% uptime", op: design,            source: design}
+  R10: {name: Explainability,             target: SHAP,        op: impl,                  source: "measured:implemented"}
+  R11: {name: Cost-effectiveness,         target: "< $200",    op: lt, threshold: 200,   source: "costconfig:Residential.unit_cost"}
+  R12: {name: Usability,                  target: "SUS >= 75", op: ge, threshold: 75,    source: "results:fig5_human_factors.json:sus_with_shap"}

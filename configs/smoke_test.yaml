@@ -1,0 +1,29 @@
+# Smoke-test overrides: runs the full pipeline end to end on small test inputs in
+# minutes, to check the installation. Numbers produced with this config are not
+# results and must not be reported. Usage:  python scripts/<script>.py --config configs/smoke_test.yaml
+inherit: configs/default.yaml
+paths:
+  simulation_samples: data/smoke/simulation_samples.csv
+  chamber_samples: data/smoke/chamber_samples.csv
+  chamber_timing: data/smoke/timing_trace.csv
+  chamber_system_metrics: data/smoke/system_metrics.csv
+  tinyml_measurements: data/smoke/esp32_measurements.csv
+  human_factors_aggregate: data/smoke/hf_aggregate.csv
+  results_dir: results_smoke
+seeds_override: [11, 23, 37]
+ensemble:
+  rf: {n_estimators: 30}
+  xgb: {n_estimators: 30}
+  stacking_cv_folds: 3
+  pruned_n_estimators: 20
+online:
+  window_days: 0.05
+imbalance:
+  smote_sampling_strategy: 0.25
+baselines_grid_file: configs/baselines_grid_smoke.yaml
+sensitivity:
+  n_seeds: 1
+  lambda_ewc: [0.001, 0.01, 0.1]
+  ph_delta: [0.001, 0.005]
+  smote_k: [3, 5]
+  critical_cost_weight: [5, 10]

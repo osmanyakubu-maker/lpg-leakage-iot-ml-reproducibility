@@ -1,0 +1,54 @@
+# Baseline hyperparameter grids (Sec. 3.8: "tuned by grid search on the
+# validation split with the same search budget").
+# Each model gets the same budget (max_configs).
+
+max_configs: 12
+selection_metric: f1_critical
+
+decision_tree:
+  max_depth: [8, 12, 16, null]
+  min_samples_leaf: [1, 5, 20]
+
+svm:
+  # Linear-kernel SVM via SGD for tractability on 1.8 M samples.
+  alpha: [1.0e-5, 1.0e-4, 1.0e-3]
+  loss: [hinge, modified_huber]
+  max_train_samples: 300000
+
+random_forest:
+  n_estimators: [500]
+  max_depth: [null, 20, 30]
+  min_samples_leaf: [1, 5]
+  max_features: [sqrt, 0.5]
+
+xgboost:
+  n_estimators: [500]
+  max_depth: [4, 6, 8]
+  learning_rate: [0.05, 0.1]
+  subsample: [0.8, 1.0]
+
+# Sequence models (require PyTorch). Input: the last `seq_len` preprocessed
+# samples of [G, T, H, S, F].
+lstm:
+  seq_len: [20]
+  hidden: [32, 64]
+  layers: [1, 2]
+  lr: [1.0e-3]
+  epochs: [10]
+cnn1d:
+  seq_len: [20]
+  channels: [32, 64]
+  kernel: [3, 5]
+  lr: [1.0e-3]
+  epochs: [10]
+attn_bilstm:
+  seq_len: [20]
+  hidden: [32, 64]
+  lr: [1.0e-3, 5.0e-4]
+  epochs: [10]
+
+# Contextual baselines: values reported by Zeng et al. [11], cited in Table 3
+# and not re-run by this code.
+contextual_baselines:
+  iTransformer-XGBoost: {accuracy: 0.915, f1_macro: 0.897, source: "Zeng et al. [11]"}
+  TLPN [11]: {accuracy: 0.911, f1_macro: 0.864, source: "Zeng et al. [11]"}

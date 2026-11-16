@@ -1,0 +1,12 @@
+# Exact versions of the environment in which the archive's tests and smoke test were run
+# (Python 3.13.18, Linux x86_64). Install with:  pip install -r requirements-lock.txt
+#
+# xgboost, shap and the optional torch are installed from requirements.txt. Every run of
+# scripts/run_all.sh records the exact versions in use in results/run_environment.txt.
+numpy==2.5.3
+pandas==3.0.5
+scipy==1.18.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+PyYAML==6.0.3
+pytest==9.1.1

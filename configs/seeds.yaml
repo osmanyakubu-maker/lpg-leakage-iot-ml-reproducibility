@@ -1,0 +1,21 @@
+# Random seeds (Sec. 3.8: "All reported results are means over 10 random seeds").
+
+# Fixed seed for the grouped train/val/test split of CFD and chamber runs.
+split_seed: 20240117
+
+# One seed per replicate; used for model training, SMOTE, stacking folds,
+# online-learning shuffles and deep-learning initialisation.
+model_seeds:
+  - 11
+  - 23
+  - 37
+  - 41
+  - 53
+  - 67
+  - 79
+  - 83
+  - 97
+  - 101
+
+# Seed for SHAP background sampling and figure subsampling.
+analysis_seed: 7

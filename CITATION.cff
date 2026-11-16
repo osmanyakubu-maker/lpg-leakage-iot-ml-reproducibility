@@ -1,0 +1,68 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the article and this archive."
+title: "Reproducibility archive: An IoT and Machine Learning Framework for LPG Leakage Monitoring and Automated Safety Control"
+type: software
+version: "0.3.0"
+license:
+  - MIT
+  - CC-BY-4.0
+repository-code: "https://github.com/osmanyakubu-maker/lpg-leakage-iot-ml-reproducibility"
+authors:
+  - family-names: Yakubu
+    given-names: Osman
+    orcid: "https://orcid.org/0000-0001-5753-0537"
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+  - family-names: Boateng
+    given-names: Frank Laud
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+  - family-names: Kanzoni
+    given-names: Issifu Damba
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+  - family-names: Amponsah
+    given-names: Alfred Adutwum
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+  - family-names: Ahmed
+    given-names: Mubarack
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+  - family-names: Effah
+    given-names: Esther Asantewaa
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+  - family-names: Adu-Boahen
+    given-names: Nixon
+    affiliation: "Department of Computer Science and Information Technology, Garden City University, Kumasi, Ghana"
+keywords:
+  - Internet of Things
+  - machine learning
+  - LPG leakage detection
+  - early-warning safety systems
+  - design science research
+  - edge AI
+  - TinyML
+references:
+  - type: dataset
+    title: "Fire, smoke and gas leakage detection dataset"
+    doi: 10.5281/zenodo.6616632
+    year: 2022
+    authors:
+      - family-names: Maltezos
+        given-names: E.
+      - name: "et al."
+preferred-citation:
+  type: article
+  title: "An IoT and Machine Learning Framework for LPG Leakage Monitoring and Automated Safety Control: A Design Science Research Study"
+  authors:
+    - family-names: Yakubu
+      given-names: Osman
+      orcid: "https://orcid.org/0000-0001-5753-0537"
+    - family-names: Boateng
+      given-names: Frank Laud
+    - family-names: Kanzoni
+      given-names: Issifu Damba
+    - family-names: Amponsah
+      given-names: Alfred Adutwum
+    - family-names: Ahmed
+      given-names: Mubarack
+    - family-names: Effah
+      given-names: Esther Asantewaa
+    - family-names: Adu-Boahen
+      given-names: Nixon
